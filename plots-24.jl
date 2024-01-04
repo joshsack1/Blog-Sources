@@ -96,41 +96,62 @@ cpi_lead24 = lead(apc_dfs[1].pi24m, 6)
 core_cpi_lead12 = lead(apc_dfs[2].pi12m, 6)
 pce_lead12 = lead(apc_dfs[3].pi12m, 6)
 core_pce_lead12 = lead(apc_dfs[4].pi12m, 6)
-#%% Create a plot for standard cpi
-cpi_coef_alignmant = scatter(
-    params[1][1][1:(end - 6)],
-    cpi_lead12[1:(end - 6)];
-    framestyle=:origin,
-    alpha=1 / 6,
-    color=:blue,
+#%% Filter the data by times when the parameter was two standard deviations away from zero
+evaluation_df = DataFrame(;
+    cpi=cpi_lead12[1:(end - 6)] - apc_dfs[1].pi12m[1:(end - 6)],
+    core_cpi=core_cpi_lead12[1:(end - 6)] - apc_dfs[2].pi12m[1:(end - 6)],
+    pce=pce_lead12[1:(end - 6)] - apc_dfs[3].pi12m[1:(end - 6)],
+    core_pce=core_pce_lead12[1:(end - 6)] - apc_dfs[4].pi12m[1:(end - 6)],
+    cpi_slope=params[1][1][1:(end - 6)],
+    core_cpi_slope=params[2][1][1:(end - 6)],
+    pce_slope=params[3][1][1:(end - 6)],
+    core_pce_slope=params[4][1][1:(end - 6)],
+    cpi_err=params[1][2][1:(end - 6)],
+    core_cpi_err=params[2][2][1:(end - 6)],
+    pce_err=params[3][2][1:(end - 6)],
+    core_pce_err=params[4][2][1:(end - 6)],
+)
+#%% Cut the missing values out of that df
+dropmissing!(evaluation_df)
+#%% Create an indicator function to determine if a value is greater than two standard deviations away from zero
+ind(param, err) = abs(param) > 2 * err
+#%% Add columns with indicators
+evaluation_df.cpi_ind = ind.(evaluation_df.cpi_slope, 2.0 .* evaluation_df.cpi_err)
+evaluation_df.core_cpi_ind =
+    ind.(evaluation_df.core_cpi_slope, 2.0 .* evaluation_df.core_cpi_err)
+evaluation_df.pce_ind = ind.(evaluation_df.pce_slope, 2.0 .* evaluation_df.pce_err)
+evaluation_df.core_pce_ind =
+    ind.(evaluation_df.core_pce_slope, 2.0 .* evaluation_df.core_pce_err)
+#%% Create scatter plots for each inflation measure
+pred_value = scatter(
+    evaluation_df.cpi_slope[evaluation_df.cpi_ind],
+    evaluation_df.cpi[evaluation_df.cpi_ind];
     label="CPI",
-    legend=:topright,
+    framestyle=:origin,
+    alpha=0.5,
+    title="12 Month Inflation Rate Change, 6 Months Ahead",
     xlabel="Slope Coefficent",
-    ylabel="Inflation Rate in Six Months",
 )
 
 scatter!(
-    params[2][1][1:(end - 6)],
-    core_cpi_lead12[1:(end - 6)];
-    color=:red,
+    evaluation_df.core_cpi_slope[evaluation_df.core_cpi_ind],
+    evaluation_df.core_cpi[evaluation_df.core_cpi_ind];
     label="Core CPI",
-    alpha=1 / 6,
+    alpha=0.5,
 )
 
 scatter!(
-    params[3][1][1:(end - 6)],
-    pce_lead12[1:(end - 6)];
-    color=:green,
+    evaluation_df.pce_slope[evaluation_df.pce_ind],
+    evaluation_df.pce[evaluation_df.pce_ind];
     label="PCE",
-    alpha=1 / 6,
+    alpha=0.5,
 )
 
 scatter!(
-    params[4][1][1:(end - 6)],
-    core_pce_lead12[1:(end - 6)];
-    color=:orange,
+    evaluation_df.core_pce_slope[evaluation_df.core_pce_ind],
+    evaluation_df.core_pce[evaluation_df.core_pce_ind];
     label="Core PCE",
-    alpha=1 / 6,
+    alpha=0.5,
 )
-#%% save figure
-savefig(cpi_coef_alignmant, "cpi-coef-alignment.png")
+#%% Save figure
+savefig(pred_value, "correlation.png")
