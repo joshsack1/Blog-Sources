@@ -8,14 +8,14 @@ I don't know how to do this on windows, but on mac or linux you have to enter th
 
 To navigate to your home directory, `cd ~`
 
-To edit your zsh configuration file, `vim .zshrc`
+To edit your zsh configuration file, `vi .zshrc`
 
-This will open vim. Use the `G` key to get to the bottom of the file. Then use the `o` key to start typing on a new line and add 
+This will open vi. Use the `G` key to get to the bottom of the file. Then use the `o` key to start typing on a new line and add 
 ```zsh
 export FRED_API_KEY = "whatever_you_get_from_fred"
 ```
 Use the esc key to exit insert mode.
-Type `:wq` to save your file and exit vim.
+Type `:wq` to save your file and exit vi.
 Then use `source .zshrc` to reevaluate your configuration file.
 
 Test that you have done this correctly with `echo FRED_API_KEY`. It should output your api key
