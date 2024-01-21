@@ -97,6 +97,14 @@ vspan!(rev_share, [Date(1990,1,1), Date(1991,3,1)]; label="Recession", color=:gr
 vspan!(rev_share, [Date(1981,7,1), Date(1982,11,1)]; label="Recession", color=:gray, alpha=0.2)
 vspan!(rev_share, [Date(1980,1,1), Date(1980,7,1)]; label="Recession", color=:gray, alpha=0.2)
 hline!(rev_share, [corp_tax_df.share[end]]; label="2019 Revenue", color=:black, linestyle=:dash)
+vline!(rev_share, [Date(2017, 1, 1)]; label="Trump Inauguration", color=:red)
+vline!(
+    rev_share,
+    [Date(2018, 1, 1)];
+    label="Trump Tax Cuts",
+    color=:red,
+    linestyle=:dash,
+)
 #%% Save the figure
 savefig(rev_share, "corp_tax_rev_share.png")
 #%% Create a basic plot showing the deficit trend
