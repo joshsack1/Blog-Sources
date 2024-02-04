@@ -84,3 +84,19 @@ hline!([0]; label="No Trend", color=:black, linestyle=:dash, linewidth=2)
 vline!(past61, [Date(2023, 11, 1)]; label="Last Update", color=:black, linestyle=:dash)
 #%% Save the figure
 savefig(past61, "past61.png")
+
+#%% Make a comparison between the PCE curves in november and december
+pce_comp = plot(
+    1:24,
+    collect(values(apc_dfs[3][end - 1, 1:24]));
+    label="PCE November 2023",
+    title="PCE Base Effect Curve: November vs December 2023",
+    xlabel="Months",
+    ylabel="Annualized Inflation Rate",
+)
+plot!(1:24, collect(values(apc_dfs[3][end, 1:24])); label="PCE December 2023")
+plot!(1:24, collect(values(apc_dfs[4][end - 1, 1:24])); label="Core PCE November 2023")
+plot!(1:24, collect(values(apc_dfs[4][end, 1:24])); label="Core PCE December 2023")
+hline!(pce_comp, [2.0]; label="Fed Target", color=:black, linestyle=:dash, linewidth=2)
+#%% Save the figure
+savefig(pce_comp, "pce_comp.png")
