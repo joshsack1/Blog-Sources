@@ -3,7 +3,7 @@ using ShiftedArrays: lead
 using StatsPlots, Dates
 #%% Set up PlotThemes
 using PlotThemes
-theme(:gruvbox_light)
+theme(:mute)
 #%% Include previously define functions
 include("analysis.jl")
 include("data.jl")
@@ -43,7 +43,7 @@ nov23 = plot(
 plot!(1:24, collect(values(apc_dfs[2][end, 1:24])); label="Core CPI")
 plot!(1:24, collect(values(apc_dfs[3][end, 1:24])); label="PCE")
 plot!(1:24, collect(values(apc_dfs[4][end, 1:24])); label="Core PCE")
-hline!([2]; lable="Fed Target", color=:black, linestyle=:dash, linewidth=2)
+hline!([2]; label="Fed Target", color=:black, linestyle=:dash, linewidth=2)
 #%% Save the figure
 savefig(nov23, "dec23.png")
 

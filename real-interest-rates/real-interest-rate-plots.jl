@@ -2,7 +2,7 @@
 using Plots, Dates
 #%% Set up PlotThemes
 using PlotThemes
-theme(:gruvbox_light)
+theme(:mute)
 #%% Call data functions
 include("data.jl")
 #%% Pull what needs to be pulled for PCI inflation
@@ -111,5 +111,5 @@ plot!(main_df.date, main_df.real18; label="18mPCI")
 plot!(main_df.date, main_df.real_exp; label="FBCLE1Y")
 plot!(main_df.date, main_df.real_uom; label="UOM")
 vline!(real_plot, [Date(2023, 7, 1)]; label="Last Hike", color=:black, linestyle=:dash, linewidth=2)
-# Save the figure
+#%% Save the figure
 savefig(real_plot, "real_interest_rates.png")
