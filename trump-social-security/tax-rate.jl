@@ -31,5 +31,12 @@ plot(
 )
 vline!([168.6], label="Social Security Cap")
 vline!([200.0], label="Medicare Surtax")
-#%% Save the figure
+#%% Save Figure
 savefig("trump-social-security/payroll-tax-rate.png")
+#%% 
+plot(yrange, tax_rate.(1000.0 .*yrange), xlabel = "Income (\$ Thousand)", ylabel = "Tax Rate (%)", label = "Tax Rate", legend = :right)
+vline!([168.6], label="Social Security Cap")
+vline!([200.0], label="Medicare Surtax")
+plot!(twinx(),yrange, yrange .* tax_rate.(1000.0 .*yrange), color = :green, label = "Tax Liability (\$ Thousands)", legend = :topright)
+#%% Save the figure
+savefig("trump-social-security/payroll-tax-rate-2.png")
