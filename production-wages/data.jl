@@ -19,18 +19,32 @@ raw_y_plot = plot(
     income_df.median;
     label="Median Real Income",
     xlabel="Year",
-    ylabel="Income (USD)",
-    title = "1974-2019: Average Outpaced Median Income",
+    ylabel="Income (2022 USD)",
+    title="1974-2019: Average Outpaced Median Income",
     formatter=:plain,
 )
 plot!(income_df.date, income_df.average; label="Average Real Income")
-vspan!(raw_y_plot, [Date(1980, 1, 1), Date(1980, 7, 1)], color = :gray, alpha = 0.2, label = "Recession")
-vspan!(raw_y_plot, [Date(1981, 7, 1), Date(1982, 11, 1)], color = :gray, alpha = 0.2, label = "")
-vspan!(raw_y_plot, [Date(1990, 7, 1), Date(1991, 3, 1)], color = :gray, alpha = 0.2, label = "")
-vspan!(raw_y_plot, [Date(2001, 3, 1), Date(2001, 11, 1)], color = :gray, alpha = 0.2, label = "")
-vspan!(raw_y_plot, [Date(2007, 12, 1), Date(2009, 6, 1)], color = :gray, alpha = 0.2, label = "")
+vspan!(
+    raw_y_plot,
+    [Date(1980, 1, 1), Date(1980, 7, 1)];
+    color=:gray,
+    alpha=0.2,
+    label="Recession",
+)
+vspan!(raw_y_plot, [Date(1981, 7, 1), Date(1982, 11, 1)]; color=:gray, alpha=0.2, label="")
+vspan!(raw_y_plot, [Date(1990, 7, 1), Date(1991, 3, 1)]; color=:gray, alpha=0.2, label="")
+vspan!(raw_y_plot, [Date(2001, 3, 1), Date(2001, 11, 1)]; color=:gray, alpha=0.2, label="")
+vspan!(raw_y_plot, [Date(2007, 12, 1), Date(2009, 6, 1)]; color=:gray, alpha=0.2, label="")
 #%% Plot the evolution of the ratio of average to median income
 income_df.ratio = income_df.average ./ income_df.median
-plot!(twinx(), income_df.date, income_df.ratio; label="Ratio", color=:red, legend = :top, ylabel = "Average/Median Real Income")
+plot!(
+    twinx(),
+    income_df.date,
+    income_df.ratio;
+    label="Ratio",
+    color=:red,
+    legend=:top,
+    ylabel="Average/Median Real Income",
+)
 #%% Save the figure
-savefig(raw_y_plot, "pre-covid-ave-med.png")
+savefig(raw_y_plot, "production-wages/pre-covid-ave-med.png")
