@@ -48,3 +48,29 @@ plot!(
 )
 #%% Save the figure
 savefig(raw_y_plot, "production-wages/pre-covid-ave-med.png")
+#%% Create a gini coefficent plot
+gini_data = get_data(f, "SIPOVGINIUSA"; observation_end="2019-12-31").data
+#%% Create a gini plot
+gini_plot = plot(
+    gini_data.date,
+    gini_data.value;
+    legend=false,
+    title="Gini Coefficent: 1963-2019",
+    xlabel="Year",
+    ylabel="Gini Coefficent",
+)
+vspan!(
+    raw_y_plot,
+    [Date(1980, 1, 1), Date(1980, 7, 1)];
+    color=:gray,
+    alpha=0.2,
+    label="Recession",
+)
+vspan!(gini_plot, [Date(1969, 12, 1), Date(1970, 11, 1)]; color=:gray, alpha=0.2, label="")
+vspan!(gini_plot, [Date(1973, 11, 1), Date(1975, 3, 1)]; color=:gray, alpha=0.2, label="")
+vspan!(gini_plot, [Date(1981, 7, 1), Date(1982, 11, 1)]; color=:gray, alpha=0.2, label="")
+vspan!(gini_plot, [Date(1990, 7, 1), Date(1991, 3, 1)]; color=:gray, alpha=0.2, label="")
+vspan!(gini_plot, [Date(2001, 3, 1), Date(2001, 11, 1)]; color=:gray, alpha=0.2, label="")
+vspan!(gini_plot, [Date(2007, 12, 1), Date(2009, 6, 1)]; color=:gray, alpha=0.2, label="")
+#%% Save the figure
+savefig(gini_plot, "production-wages/pre-covid-gini.png")
