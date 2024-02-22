@@ -74,3 +74,38 @@ vspan!(gini_plot, [Date(2001, 3, 1), Date(2001, 11, 1)]; color=:gray, alpha=0.2,
 vspan!(gini_plot, [Date(2007, 12, 1), Date(2009, 6, 1)]; color=:gray, alpha=0.2, label="")
 #%% Save the figure
 savefig(gini_plot, "production-wages/pre-covid-gini.png")
+#%% Get set up for wealth plot
+wealth_series = ["WFRBLB50107", "WFRBLN40080", "WFRBLN09053", "WFRBLT01026"]
+wealth_raw = get_data.(Ref(f), wealth_series, observation_end="2019-12-31")
+#%% Create a merged dataframe
+wealth_data = [wealth_raw[i].data for i in eachindex(wealth_raw)]
+##%% set up the main dataframe
+wealth_df = DataFrame(;
+    date=wealth_data[1].date,
+    bottom_50=wealth_data[1].value,
+    middle_40=wealth_data[2].value,
+    most_10=wealth_data[3].value,
+    top_1=wealth_data[4].value,
+)
+#%% Create relative data columns
+wealth_df.bottom_perf = 100.0 * wealth_df.bottom_50 / wealth_df.bottom_50[1]
+wealth_df.middle_perf = 100.0 * wealth_df.middle_40 / wealth_df.middle_40[1]
+wealth_df.most_perf = 100.0 * wealth_df.most_10 / wealth_df.most_10[1]
+wealth_df.top_perf = 100.0 * wealth_df.top_1 / wealth_df.top_1[1]
+#%% Create a relative wealth plot
+wealth_plot = plot(
+    wealth_df.date,
+    wealth_df.bottom_perf;
+    label="Bottom 50%",
+    title="1989-2019: The Rich did Much Better",
+    xlabel="Year",
+    ylabel="Wealth (Q2 1989=100)",
+)
+plot!(wealth_df.date, wealth_df.middle_perf; label="50 - 90%")
+plot!(wealth_df.date, wealth_df.most_perf; label="90 - 99%")
+plot!(wealth_df.date, wealth_df.top_perf; label="Top 1%")
+vspan!(wealth_plot, [Date(1990, 7, 1), Date(1991, 3, 1)]; color=:gray, alpha=0.2, label="Recession")
+vspan!(wealth_plot, [Date(2001, 3, 1), Date(2001, 11, 1)]; color=:gray, alpha=0.2, label="")
+vspan!(wealth_plot, [Date(2007, 12, 1), Date(2009, 6, 1)]; color=:gray, alpha=0.2, label="")
+#%% Save the figure
+savefig(wealth_plot, "production-wages/pre-covid-wealth.png")
